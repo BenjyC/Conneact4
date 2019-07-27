@@ -11,13 +11,11 @@ function Square(props) {
 }
 
 function Circle(props) {
-
     return (
         <button className="circle">
             {props.value}
         </button>
     );
-
 }
   
 class Board extends React.Component {
@@ -25,15 +23,18 @@ class Board extends React.Component {
         super(props);
         this.state = {
             squares: Array(42).fill(null),
-            //circles: Array(16).fill(null),
             yIsNext: true,
         };
     }
 
     handleClick(i) {
         const squares = this.state.squares.slice();
-        
-        squares[i] = this.state.yIsNext ? 'Red':'Yellow';
+        if (calculateWinner(squares) || squares[i]) {
+            return;
+        }
+
+        //Find which square the piece lands in
+        squares[calculatePosition(i, squares)] = this.state.yIsNext ? 'Red':'Yellow';
         this.setState({
             squares: squares,
             yIsNext: !this.state.yIsNext,
@@ -52,6 +53,7 @@ class Board extends React.Component {
     renderSquare(i) {
         return (
             <Square 
+                // value={this.state.squares[i]}
                 value={this.state.squares[i]}
                 onClick={() => this.handleClick(i)} 
             />
@@ -68,12 +70,11 @@ class Board extends React.Component {
             status = 'Next Player: ' + (this.state.yIsNext ? 'Red':'Yellow');
         }
 
-
         return (
             <div>
                 <div className="status">{status}</div>
-                <div class="container_row">
-                    <div class="fullboard">
+                <div className="container_row">
+                    <div className="fullboard">
                         <div className="board-row">
                             {this.renderSquare(0)}
                             {this.renderSquare(1)}
@@ -130,7 +131,7 @@ class Board extends React.Component {
                         </div>
                     </div>
                     
-                    {/* <div class="fullcounters">
+                    {/* <div className="fullcounters">
                         <div className="counter-row">
                             {this.renderCircle(0)}
                             {this.renderCircle(1)}
@@ -171,12 +172,33 @@ class Game extends React.Component {
                     <Board />
                 </div>
                 <div className="game-info">
-                    <div>{/* status */}</div>
+                    <div></div>
                     <ol>{/* TODO */}</ol>
                 </div>
             </div>
         );
     }
+}
+
+//Calculate where the piece will be placed
+function calculatePosition(val, squares) {
+    //Iterate through top row (where pieces are dropped)
+    for (let i = 0; i < 7; i++) {
+        //Find which column of top row
+        if (i === val) {
+            let n = val;
+            //Move down given column looking for any pieces
+            for (let j = 0; j < 5; j++) {
+                n = n + 7;
+                //Find a piece and return position above as location for new piece
+                if (squares[n] != null) {
+                    return n-7;
+                } 
+            }
+            return n;
+        }
+    }
+
 }
 
 function calculateWinner(squares) {
