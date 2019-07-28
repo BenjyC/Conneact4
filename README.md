@@ -1,6 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Overview
+## Conneact 4 
 
 This is my own attempt at creating a Connect 4 game using React.
 
