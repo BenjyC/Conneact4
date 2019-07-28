@@ -164,7 +164,6 @@ class Board extends React.Component {
 }
   
 class Game extends React.Component {
-
     render() {
         return (
             <div className="game">
@@ -198,20 +197,69 @@ function calculatePosition(val, squares) {
             return n;
         }
     }
-
 }
 
 function calculateWinner(squares) {
-    const lines = [
-        [0, 1, 2, 3],
-        [3, 4, 5, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-        const [a, b, c, d] = lines[i];
-        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
-            return squares[a];
+    
+    //Horizontal
+    for (let i=0; i<36; i=i+7) {
+        //The groups of 4 along each row
+        for (let j=0; j<5; j++) {
+            let n = i+j;
+            //Group 4 on each row
+            const [a, b, c, d] = [n, n+1, n+2, n+3];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
+                return squares[a];
+            }
         }
     }
+
+    //Vertical
+    for (let i=0; i<7; i++) {
+        for (let j=0; j<4; j++){
+            let n = i + j;
+            const [a, b, c, d] = [n, n+7, n+14, n+21];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
+                return squares[a];
+            }
+        }
+    }
+
+    //Diagonal
+    const lines = [
+        [14,22,30,38],
+        [7,15,23,31],
+        [15,23,31,39],
+        [0,8,16,24],
+        [8,16,24,32],
+        [16,24,32,40],
+        [1,9,17,25],
+        [9,17,24,33],
+        [17,25,33,41],
+        [2,10,18,26],
+        [10,18,26,34],
+        [3,11,19,27],
+        [21,15,9,3],
+        [28,22,16,10],
+        [22,16,10,4],
+        [35,29,23,17],
+        [29,23,17,11],
+        [23,17,11,5],
+        [36,30,24,18],
+        [30,24,18,12],
+        [24,18,12,6],
+        [37,31,25,19],
+        [31,25,19,13],
+        [38,32,26,20],
+    ]
+
+    for (let i = 0; i < lines.length; i++) {
+		const [a, b, c, d] = lines[i];
+		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
+			return squares[a];
+		}
+    }
+    
     return null;
 }
   
